@@ -1,4 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:jaga_janin_apk/Home_page.dart';
+import 'package:jaga_janin_apk/Login_Interface/Login_page.dart';
+import 'Home_page.dart';
+import 'Button/Setting_Menu.dart';
+import 'Login_Interface/SinginUp.dart';
+import 'package:jaga_janin_apk/Quisioner/HalamanQuisioner.dart';
+import 'package:jaga_janin_apk/Quisioner/DataAll.dart';
 
 void main() {
   runApp(const MainApp());
@@ -10,11 +17,8 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+      debugShowCheckedModeBanner: false,
+      home: HomePage(),
     );
   }
 }
