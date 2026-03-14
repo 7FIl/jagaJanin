@@ -9,14 +9,14 @@ class KuesionerHalaman extends StatefulWidget {
   const KuesionerHalaman({super.key});
 
   @override
-  State<KuesionerHalaman> createState() => _KuesionerHalamanState();
+  State<KuesionerHalaman> createState() => KuesionerHalamanState();
 }
 
-class _KuesionerHalamanState extends State<KuesionerHalaman> {
+class KuesionerHalamanState extends State<KuesionerHalaman> {
   final PageController _pageController = PageController();
-  int _halamanSekarang = 0;
+  int halamanSekarang = 0;
 
-  final List<Widget> _daftarHalaman = [
+  final List<Widget> daftarHalaman = [
     const Halaman1(), // Tampilan halaman 1
     const Halaman2(), // Tampilan halaman 2
     const Halaman3(), // Tampilan halaman 3
@@ -53,7 +53,7 @@ class _KuesionerHalamanState extends State<KuesionerHalaman> {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
-                    "Tahap ${_halamanSekarang + 1} dari ${_daftarHalaman.length}",
+                    "Tahap ${halamanSekarang + 1} dari ${daftarHalaman.length}",
                     textAlign: TextAlign.right,
                     style: TextStyle(fontSize: 14, color: Colors.grey),
                   ),
@@ -69,7 +69,7 @@ class _KuesionerHalamanState extends State<KuesionerHalaman> {
                 right: 20,
               ),
               child: LinearProgressIndicator(
-                value: (_halamanSekarang + 1) / _daftarHalaman.length,
+                value: (halamanSekarang + 1) / daftarHalaman.length,
                 minHeight: 6,
                 borderRadius: BorderRadius.circular(10),
                 backgroundColor: Colors.grey[200],
@@ -83,10 +83,10 @@ class _KuesionerHalamanState extends State<KuesionerHalaman> {
                 physics: const NeverScrollableScrollPhysics(),
                 onPageChanged: (int index) {
                   setState(() {
-                    _halamanSekarang = index;
+                    halamanSekarang = index;
                   });
                 },
-                children: _daftarHalaman,
+                children: daftarHalaman,
               ),
             ),
 
@@ -96,7 +96,7 @@ class _KuesionerHalamanState extends State<KuesionerHalaman> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  if (_halamanSekarang > 0)
+                  if (halamanSekarang > 0)
                     TextButton(
                       onPressed: () => _pageController.previousPage(
                         duration: const Duration(milliseconds: 500),
@@ -109,7 +109,7 @@ class _KuesionerHalamanState extends State<KuesionerHalaman> {
 
                   ElevatedButton(
                     onPressed: () {
-                      if (_halamanSekarang < _daftarHalaman.length - 1) {
+                      if (halamanSekarang < daftarHalaman.length - 1) {
                         _pageController.nextPage(
                           duration: const Duration(milliseconds: 500),
                           curve: Curves.ease,
@@ -132,7 +132,7 @@ class _KuesionerHalamanState extends State<KuesionerHalaman> {
                       ),
                     ),
                     child: Text(
-                      _halamanSekarang == _daftarHalaman.length - 1
+                      halamanSekarang == daftarHalaman.length - 1
                           ? 'SELESAI'
                           : 'LANJUT',
                       style: TextStyle(color: Colors.white),

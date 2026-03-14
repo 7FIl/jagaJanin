@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:jaga_janin_apk/Tools/KotakInfo.dart';
 import 'package:jaga_janin_apk/Tools/Tombol_pink.dart';
+import 'package:jaga_janin_apk/Home_page.dart';
+import 'package:jaga_janin_apk/Unit/Home.dart';
 
 class DataAll extends StatelessWidget {
   const DataAll({super.key});
@@ -200,10 +202,10 @@ class DataAll extends StatelessWidget {
                 Center(
                   child: ButtonPink(
                     Nama: "Masuk ke Dashboard",
-                    onPressed: null,
+                    onPressed: HomePage(),
                   ),
                 ),
-
+                
                 SizedBox(height: 10),
                 Center(
                   child: Row(

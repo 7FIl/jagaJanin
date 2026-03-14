@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jaga_janin_apk/Quisioner/HalamanQuisioner.dart';
 import 'package:jaga_janin_apk/Tools/TextField_interface.dart';
 
 class Register extends StatefulWidget {
@@ -92,7 +93,12 @@ class _RegisterState extends State<Register> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context, MaterialPageRoute(builder: (context) => 
+                        KuesionerHalaman())
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFFF48FB1),
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -178,7 +184,9 @@ class _RegisterState extends State<Register> {
                       ),
                       TextButton(
                         onPressed: () {
-                          print('Navigasi ke halaman login...');
+                          Navigator.pushReplacement(
+                            context, MaterialPageRoute(builder: (context) => Register())
+                          );
                         },
                         child: const Text(
                           'Daftar di sini',
