@@ -1,34 +1,34 @@
-export const registerSchema = {
+export const updateUserProfileSchema = {
     body: {
         type: "object",
-        required: ["fullName", "email", "password"],
         properties: {
             fullName: { type: "string", minLength: 2 },
             email: { type: "string", format: "email" },
             password: { type: "string", minLength: 6 }
         },
-        additionalProperties: false
+        additionalProperties: false,
+        minProperties: 1
     }
 };
 
-export const loginSchema = {
+export const updatePasswordSchema = {
     body: {
         type: "object",
-        required: ["email", "password"],
+        required: ["currentPassword", "newPassword"],
         properties: {
-            email: { type: "string", format: "email" },
-            password: { type: "string" }
+            currentPassword: { type: "string" },
+            newPassword: { type: "string", minLength: 6 }
         },
         additionalProperties: false
     }
 };
 
-export const refreshTokenSchema = {
+export const updatePreferenceSchema = {
     body: {
         type: "object",
-        required: ["refreshToken"],
+        required: ["foodPreference"],
         properties: {
-            refreshToken: { type: "string" }
+            foodPreference: { type: "integer", minimum: 1 }
         },
         additionalProperties: false
     }

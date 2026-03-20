@@ -1,10 +1,13 @@
 import fastify from "fastify";
 import fastifyJwt from "@fastify/jwt";
+import multipart from "@fastify/multipart";
 import { checkDatabaseConnection } from "./db/index.js";
-import { authroutes } from "./routes/auth.routes.js";
+import { authRoutes } from "./routes/auth.routes.js";
 import { formRoutes } from "./routes/form.routes.js";
 import { authPlugin } from "./plugins/auth.plugins.js";
 import "dotenv/config";
+import { usersRoutes } from "./routes/users.routes.js";
+import { dashboardRoutes } from "./routes/dashboard.route.js";
 
 const app = fastify();
 
@@ -19,7 +22,13 @@ if (!PORT) {
 }
 
 app.register(fastifyJwt, {
-    secret: jwtSecret
+  secret: jwtSecret
+});
+
+await app.register(multipart,{
+  limits: {
+    fileSize: 2 * 1024 * 1024,
+  },
 });
 
 app.register(authPlugin);
@@ -35,10 +44,12 @@ app.get("/health", async (request, reply) => {
     return { status: 'unhealthy', database: 'disconnected' };
 });
 
-app.register(authroutes, { prefix: "/api/v1/auth" });
+app.register(authRoutes, { prefix: "/api/v1/auth" });
 app.register(formRoutes, { prefix: "/api/v1/forms" });
+app.register(usersRoutes, { prefix: "/api/v1/users" });
+app.register(dashboardRoutes, { prefix: "/api/v1/dashboard" });
 
-app.listen({ port: PORT as unknown as number }, (err, address) => {
+app.listen({ port: Number(PORT) }, (err, address) => {
   if (err) {
     console.error("Failed to start server:", err);
     app.log.error(err);
