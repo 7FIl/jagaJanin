@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:flutter_jagajanin/App/Modules/details/controllers/detail_controllers.dart';
 
 class Trimester2Kia extends StatefulWidget {
   const Trimester2Kia({super.key});
@@ -8,6 +10,21 @@ class Trimester2Kia extends StatefulWidget {
 }
 
 class _Trimester2KiaState extends State<Trimester2Kia> {
+  late DetailController controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Get DetailController
+    try {
+      controller = Get.find<DetailController>();
+      print('✅ Trimester2_KIA: DetailController ditemukan');
+    } catch (e) {
+      print('⚠️ Trimester2_KIA: DetailController tidak ditemukan, create fallback');
+      controller = Get.put(DetailController(), permanent: false);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,21 +79,31 @@ class _Trimester2KiaState extends State<Trimester2Kia> {
                                       fontSize: 15,
                                     ),
                                   ),
-                                  const Text(
-                                    '24 Minggu',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const Text(
-                                    'Trimester 2 • HPL 12 Juli 2026',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15,
-                                    ),
-                                  ),
+                                  Obx(() {
+                                    final minggu = controller.detailData.value?.minggu ?? 24;
+                                    final hpl = controller.detailData.value?.hpl ?? '12 Juli 2026';
+                                    return Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          '$minggu Minggu',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 5),
+                                        Text(
+                                          'Trimester 2 • HPL $hpl',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }),
  
                                   SizedBox(height: 10),
                                   Row(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:get/get.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:flutter_jagajanin/App/Modules/details/controllers/detail_controllers.dart';
 import 'package:flutter_jagajanin/App/Modules/home/Home_set/Dashbord_unit/Food_Log.dart';
 import 'package:flutter_jagajanin/App/Modules/home/Home_set/Dashbord_unit/CalorieDetailPage.dart';
 import 'package:flutter_jagajanin/App/Modules/home/Home_set/Dashbord_unit/FoodLogPage.dart';
@@ -24,9 +25,18 @@ class _Trisemester1State extends State<Trisemester1> {
     return Get.find<FoodController>();
   }
 
+  late DetailController detailController;
+
   @override
   void initState() {
     super.initState();
+    
+    // Get DetailController
+    try {
+      detailController = Get.find<DetailController>();
+    } catch (e) {
+      detailController = Get.put(DetailController(), permanent: true);
+    }
   }
 
 
@@ -99,14 +109,17 @@ class _Trisemester1State extends State<Trisemester1> {
                       Expanded(
                         child: InkWell(
                           onTap: () {}, // Trigger daftar minggu
-                          child: const Center(
-                            child: Text(
-                              "Minggu ke-2",
-                              style: TextStyle(
-                                color: Color(0xFFF48FB1),
-                                fontSize: 16,
-                              ),
-                            ),
+                          child: Center(
+                            child: Obx(() {
+                              final minggu = detailController.detailData.value?.minggu ?? 2;
+                              return Text(
+                                "Minggu ke-$minggu",
+                                style: const TextStyle(
+                                  color: Color(0xFFF48FB1),
+                                  fontSize: 16,
+                                ),
+                              );
+                            }),
                           ),
                         ),
                       ),
