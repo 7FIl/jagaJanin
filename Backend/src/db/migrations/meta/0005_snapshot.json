@@ -1,6 +1,6 @@
 {
-  "id": "dd5acb5e-c861-47b5-8e1e-c34df011c714",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "ae007119-1031-4c43-b3f2-d3f113a3c919",
+  "prevId": "839cf4a8-e3a0-4002-8001-62998d942401",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -32,9 +32,9 @@
           "primaryKey": false,
           "notNull": true
         },
-        "quantity": {
-          "name": "quantity",
-          "type": "integer",
+        "picture_url": {
+          "name": "picture_url",
+          "type": "text",
           "primaryKey": false,
           "notNull": true
         }
@@ -80,6 +80,12 @@
         },
         "food_id": {
           "name": "food_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "quantity": {
+          "name": "quantity",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
@@ -247,6 +253,65 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
+    "public.refresh_tokens": {
+      "name": "refresh_tokens",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "token": {
+          "name": "token",
+          "type": "varchar(255)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "expires_at": {
+          "name": "expires_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "refresh_tokens_user_id_users_id_fk": {
+          "name": "refresh_tokens_user_id_users_id_fk",
+          "tableFrom": "refresh_tokens",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.serving": {
       "name": "serving",
       "schema": "",
@@ -277,13 +342,13 @@
         },
         "fat": {
           "name": "fat",
-          "type": "integer",
+          "type": "numeric(5, 2)",
           "primaryKey": false,
           "notNull": true
         },
         "protein": {
           "name": "protein",
-          "type": "integer",
+          "type": "numeric(5, 2)",
           "primaryKey": false,
           "notNull": true
         },
@@ -331,12 +396,25 @@
           "primaryKey": false,
           "notNull": true
         },
+        "phone_number": {
+          "name": "phone_number",
+          "type": "varchar(20)",
+          "primaryKey": false,
+          "notNull": true
+        },
         "role": {
           "name": "role",
           "type": "varchar(50)",
           "primaryKey": false,
           "notNull": true,
           "default": "'user'"
+        },
+        "avatar_url": {
+          "name": "avatar_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'empty'"
         },
         "complete_onboarding": {
           "name": "complete_onboarding",

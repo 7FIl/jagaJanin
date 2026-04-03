@@ -1,6 +1,10 @@
 # Dependencies
 node_modules/
 
+#Test & coverage
+test/
+coverage/
+
 # Build output
 dist/
 
@@ -27,3 +31,4 @@ Thumbs.db
 
 # TypeScript cache
 *.tsbuildinfo
+docker-compose.dev.yml

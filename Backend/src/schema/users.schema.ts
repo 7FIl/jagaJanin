@@ -1,24 +1,35 @@
-export const registerSchema = {
+export const updateUserProfileSchema = {
     body: {
         type: "object",
-        required: ["fullName", "email", "password", "phoneNumber"],
         properties: {
             fullName: { type: "string", minLength: 2 },
             email: { type: "string", format: "email" },
             password: { type: "string", minLength: 6 },
             phoneNumber: { type: "string", minLength: 10, maxLength: 20 }
         },
+        additionalProperties: false,
+        minProperties: 1
+    }
+};
+
+export const updatePasswordSchema = {
+    body: {
+        type: "object",
+        required: ["currentPassword", "newPassword"],
+        properties: {
+            currentPassword: { type: "string" },
+            newPassword: { type: "string", minLength: 6 }
+        },
         additionalProperties: false
     }
 };
 
-export const loginSchema = {
+export const updatePreferenceSchema = {
     body: {
         type: "object",
-        required: ["email", "password"],
+        required: ["foodPreference"],
         properties: {
-            email: { type: "string", format: "email" },
-            password: { type: "string" }
+            foodPreference: { type: "integer", minimum: 1 }
         },
         additionalProperties: false
     }
@@ -30,17 +41,6 @@ export const updatePhoneNumberSchema = {
         required: ["phoneNumber"],
         properties: {
             phoneNumber: { type: "string", minLength: 10, maxLength: 20 }
-        },
-        additionalProperties: false
-    }
-};
-
-export const refreshTokenSchema = {
-    body: {
-        type: "object",
-        required: ["refreshToken"],
-        properties: {
-            refreshToken: { type: "string" }
         },
         additionalProperties: false
     }
