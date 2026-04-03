@@ -1,24 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_jagajanin/App/Modules/Login/View/Widget/Card/jadwalKonsultasiCard.dart';
 import 'package:flutter_jagajanin/App/Modules/Login/View/Widget/Card/DokterCard.dart';
+import 'package:flutter_jagajanin/App/Modules/home/Controllers/KonsultasiController.dart';
+import 'package:get/get.dart';
 
-class Konsultasi extends StatefulWidget {
+class Konsultasi extends StatelessWidget {
   const Konsultasi({super.key});
 
   @override
-  State<Konsultasi> createState() => _KonsultasiState();
-}
-
-class _KonsultasiState extends State<Konsultasi> {
-  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
               SizedBox(height: 20),
               Text(
                 "Temukan dokter untuk konsultasi kesehatan kehamilan",
@@ -76,7 +71,7 @@ class _KonsultasiState extends State<Konsultasi> {
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: const [
+                  children: [
                     Text(
                       'Jadwal Konsultasi',
                       style: TextStyle(
@@ -85,23 +80,70 @@ class _KonsultasiState extends State<Konsultasi> {
                         color: Color(0xFF2D3142),
                       ),
                     ),
-                    Text(
-                      'Lihat semua',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: Color(0xFFE594AB), // Warna pink
-                      ),
-                    ),
+                    if (Get.isRegistered<KonsultasiController>())
+                      Obx(
+                        () {
+                          final controller = Get.find<KonsultasiController>();
+                          return controller.jadwalList.isNotEmpty
+                              ? Text(
+                                  'Lihat semua',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Color(0xFFE594AB),
+                                  ),
+                                )
+                              : const SizedBox.shrink();
+                        },
+                      )
+                    else
+                      const SizedBox.shrink(),
                   ],
                 ),
               ),
               SizedBox(height: 16),
-              JadwalKonsultasiCard(
-                tanggal: 'Rabu, 13 April 2026',
-                dokter: 'Dr. Iwan, SpOG',
-              ),
-
-              SizedBox(height: 16),
+              // Display all scheduled consultations
+              if (Get.isRegistered<KonsultasiController>())
+                Obx(
+                  () {
+                    final controller = Get.find<KonsultasiController>();
+                    final isEmpty = controller.jadwalList.isEmpty;
+                    return isEmpty
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Text(
+                              'Belum ada jadwal konsultasi',
+                              style: TextStyle(color: Colors.grey[600]),
+                            ),
+                          )
+                        : ListView.separated(
+                            padding: EdgeInsets.zero,
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: controller.jadwalList.length,
+                            separatorBuilder: (context, index) =>
+                                const SizedBox(height: 12),
+                            itemBuilder: (context, index) {
+                              final jadwal = controller.jadwalList[index];
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                child: JadwalKonsultasiCard(
+                                  tanggal: jadwal.tanggal,
+                                  dokter: jadwal.dokter,
+                                ),
+                              );
+                            },
+                          );
+                  },
+                )
+              else
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    'Memuat...',
+                    style: TextStyle(color: Colors.grey[600]),
+                  ),
+                ),
+              SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Row(
@@ -132,11 +174,38 @@ class _KonsultasiState extends State<Konsultasi> {
                 pengalaman: '12',
                 tarif: '50.000',
                 fotoUrl: 'assets/img/Dokter.png',
+                rumahSakit: 'RSIA Bunda Jakarta',
+                hari1: 'Senin',
+                kondisi1: 'Konsultasi Online',
+                waktu1: '09.00 - 12.00',
+                hari2: 'Rabu',
+                kondisi2: 'Pagi',
+                waktu2: '14.00 - 17.00',
+                hari3: 'Jumat',
+                kondisi3: 'Konsultasi Online',
+                waktu3: '09.00 - 12.00',
               ),
+              SizedBox(height: 16),
+              DoctorCard(
+                nama: 'Dr. Siti, SpOG',
+                spesialis: 'Obgyn',
+                pengalaman: '8',
+                tarif: '45.000',
+                fotoUrl: 'assets/img/Dokter2.png',
+                rumahSakit: 'RSIA Bunda Jakarta',
+                hari1: 'Selasa',
+                kondisi1: 'Malam',
+                waktu1: '18.00 - 21.00',
+                hari2: 'Kamis',
+                kondisi2: 'Konsultasi Online',
+                waktu2: '09.00 - 12.00',
+                hari3: 'Sabtu',
+                kondisi3: 'Pagi',
+                waktu3: '09.00 - 12.00',
+              ),
+              SizedBox(height: 150),
             ],
           ),
-        ),
-      ),
-    );
+        );
   }
 }

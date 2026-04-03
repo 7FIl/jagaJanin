@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_jagajanin/App/Modules/Login/View/Widget/Button/DoctorProfil.dart';
+import 'package:flutter_jagajanin/App/Modules/Login/View/Widget/Dialog/PilihJadwalKonsultasiDialog.dart';
+import 'package:flutter_jagajanin/App/Modules/home/Controllers/KonsultasiController.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 
 class DoctorCard extends StatelessWidget {
   final String nama;
@@ -8,6 +14,16 @@ class DoctorCard extends StatelessWidget {
   final String pengalaman;
   final String tarif;
   final String fotoUrl;
+  final String rumahSakit;
+  final String? hari1;
+  final String? hari2;
+  final String? hari3;
+  final String? waktu1;
+  final String? waktu2;
+  final String? waktu3;
+  final String? kondisi1;
+  final String? kondisi2;
+  final String? kondisi3;
 
   const DoctorCard({
     super.key,
@@ -16,6 +32,16 @@ class DoctorCard extends StatelessWidget {
     required this.pengalaman,
     required this.tarif,
     required this.fotoUrl,
+    required this.rumahSakit,
+    this.hari1,
+    this.hari2,
+    this.hari3,
+    this.waktu1,
+    this.waktu2,
+    this.waktu3,
+    this.kondisi1,
+    this.kondisi2,
+    this.kondisi3,
   });
 
   @override
@@ -109,7 +135,25 @@ class DoctorCard extends StatelessWidget {
                 // Tombol Lihat Profil (Outline)
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.to(() => ProfilDokter(
+                            nama: nama,
+                            spesialis: spesialis,
+                            pengalaman: pengalaman,
+                            tarif: tarif,
+                            gambar: fotoUrl,
+                            rumahSakit: rumahSakit,
+                            hari1: hari1,
+                            kondisi1: kondisi1,
+                            waktu1: waktu1,
+                            hari2: hari2,
+                            kondisi2: kondisi2,
+                            waktu2: waktu2,
+                            hari3: hari3,
+                            kondisi3: kondisi3,
+                            waktu3: waktu3,
+                          ));
+                    },
                     style: OutlinedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 12),
                       side: const BorderSide(
@@ -133,7 +177,51 @@ class DoctorCard extends StatelessWidget {
                 // Tombol Konsultasi (Filled)
                 Expanded(
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (context) => PilihJadwalKonsultasiDialog(
+                          nama: nama,
+                          spesialis: spesialis,
+                          tarif: tarif,
+                          hari1: hari1 ?? 'Senin',
+                          waktu1: waktu1 ?? '09.00 - 12.00',
+                          kondisi1: kondisi1 ?? 'Konsultasi',
+                          hari2: hari2,
+                          waktu2: waktu2,
+                          kondisi2: kondisi2,
+                          hari3: hari3,
+                          waktu3: waktu3,
+                          kondisi3: kondisi3,
+                          onConfirm: (tanggal, waktu) {
+                            // Close the dialog - will provide context automatically
+                            Navigator.pop(context);
+                            
+                            // Defer to next frame to let dialog close animation complete
+                            SchedulerBinding.instance.addPostFrameCallback((_) {
+                              Future.delayed(const Duration(milliseconds: 300), () {
+                                // Ensure controller exists
+                                if (!Get.isRegistered<KonsultasiController>()) {
+                                  Get.lazyPut<KonsultasiController>(() => KonsultasiController());
+                                }
+                                
+                                // Add the consultation schedule
+                                final controller = Get.find<KonsultasiController>();
+                                controller.addJadwal(
+                                  tanggal: tanggal,
+                                  waktu: waktu,
+                                  dokter: nama,
+                                  spesialis: spesialis,
+                                  tarif: tarif,
+                                );
+                                
+                                debugPrint('✅ Jadwal konsultasi ditambahkan: $nama');
+                              });
+                            });
+                          },
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFE594AB),
                       padding: const EdgeInsets.symmetric(vertical: 12),

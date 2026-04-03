@@ -8,6 +8,7 @@ import 'package:flutter_jagajanin/App/Modules/Login/Login_Interface/Login_page.d
 import 'package:flutter_jagajanin/App/Modules/home/KIA/trimester1_KIA.dart';
 import 'package:flutter_jagajanin/App/Modules/Login/View/Quisioner/DataAll.dart';
 import 'package:flutter_jagajanin/App/Modules/home/Home_set/Dashbord_unit/Food_Log.dart';
+import 'package:flutter_jagajanin/App/Modules/home/Unit/konsultasi.dart';
 import 'package:get/get.dart';
 
 abstract class AppPages {
@@ -44,6 +45,10 @@ abstract class AppPages {
     GetPage(
       name: '/foodlog',
       page: () => const FoodLog(),
+    ),
+    GetPage(
+      name: '/konsultasi',
+      page: () => const Konsultasi(),
     ),
   ];
 }

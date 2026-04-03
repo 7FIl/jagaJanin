@@ -3,6 +3,7 @@ import 'package:flutter_jagajanin/App/Modules/home/Unit/Home.dart';
 import 'package:flutter_jagajanin/App/Modules/home/Unit/Kalender.dart';
 import 'package:flutter_jagajanin/App/Modules/home/Unit/Profil.dart';
 import 'package:flutter_jagajanin/App/Modules/home/Unit/konsultasi.dart';
+import 'package:flutter_jagajanin/App/Modules/home/Controllers/KonsultasiController.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_instance/src/extension_instance.dart';
@@ -32,6 +33,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    // Initialize controllers early with lazyPut for better stability
+    if (!Get.isRegistered<KonsultasiController>()) {
+      Get.lazyPut<KonsultasiController>(() => KonsultasiController());
+    }
+    if (!Get.isRegistered<FoodController>()) {
+      Get.put(FoodController());
+    }
   }
 
   void _navigateToFoodLog() {
@@ -82,7 +90,7 @@ class _HomePageState extends State<HomePage> {
     ];
 
     return Scaffold(
-      appBar: !(pageList[currentPageIndex] is Profil)
+      appBar: currentPageIndex != 3  // 3 = Profil
           ? AppBar(
               title: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -118,7 +126,7 @@ class _HomePageState extends State<HomePage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),
-        backgroundColor: Color(0xFFF48FB1), // Warna pink sesuai gambar
+        backgroundColor: const Color(0xFFF48FB1),
         onPressed: () {
           _navigateToFoodLog();
         },
