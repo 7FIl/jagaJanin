@@ -9,6 +9,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  fl_chart: ^0.70.2
+  font_awesome_flutter: ^10.7.0
+  percent_indicator: ^4.2.5
+  http: ^1.1.0
+  material_design_icons_flutter: ^7.0.7296
+  get: ^4.6.6
 
 dev_dependencies:
   flutter_test:
@@ -23,6 +29,13 @@ flutter:
     - assets/img/gambar_02.png
     - assets/img/Google.png
     - assets/img/GambarYg.png
+    - assets/img/buah.png
+    - assets/img/Nasi.png
+    - assets/img/Ayamm.png
+    - assets/img/Salad.png
+    - assets/img/Tahu.png
+    - assets/img/Bunda.jpg
+    - assets/img/Dokter.png
 
     
 
