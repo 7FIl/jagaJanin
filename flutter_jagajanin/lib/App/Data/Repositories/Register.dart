@@ -1,35 +1,43 @@
-import 'dart:convert';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:http/http.dart' as http;
-import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-Future<void> registerUser(BuildContext context, String name, String email, String password) async {
-  // Gunakan IP 10.0.2.2 untuk emulator Android
-  final url = Uri.parse('https://be-internship.bccdev.id/ragil/POST/auth/register'); 
+class RegisterService extends GetConnect {
+  // Endpoint API untuk register - /POST/ bukan bagian dari path!
+  final String baseUrlPath = "https://be-internship.bccdev.id/ragil/auth"; 
 
-  try {
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'name': name,       // Pastikan key ini sama dengan yang diminta backend
-        'email': email,
-        'password': password,
-      }),
-    );
+  RegisterService() {
+    httpClient.baseUrl = baseUrlPath;
+    httpClient.timeout = const Duration(seconds: 30);
+  }
 
-    if (response.statusCode == 201 || response.statusCode == 200) {
-     
-      print("Registrasi Berhasil!");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Akun berhasil dibuat! Silahkan Login.")),
+  Future<Response> registerUser(String fullName, String email, String password, String phoneNumber) async {
+    try {
+      final requestBody = {
+        "fullName": fullName,
+        "email": email,
+        "password": password,
+        "phoneNumber": phoneNumber,
+      };
+      
+      // Debug: Print URL dan request body
+      print("📤 Register Request:");
+      print("   URL: $baseUrlPath/register");
+      print("   Method: POST");
+      print("   Body: $requestBody");
+      
+      final response = await post(
+        '/register',
+        requestBody,
       );
-      Get.offNamed('/login'); // Kembali ke halaman login
-    } else {
-      print("Gagal Register: ${response.body}");
+      
+      // Debug: Print response
+      print("📥 Register Response:");
+      print("   Status: ${response.statusCode}");
+      print("   Body: ${response.body}");
+      
+      return response;
+    } catch (e) {
+      print("❌ API Register Error: $e");
+      rethrow;
     }
-  } catch (e) {
-    print("Error koneksi: $e");
   }
 }

@@ -1,15 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_jagajanin/App/Modules/Login/View/Widget/Tools/TextField_interface.dart';
 import 'package:get/get.dart';
+import 'package:flutter_jagajanin/App/Data/Repositories/Login_controller.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   const Login({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final TextEditingController _emailController = TextEditingController();
-    final TextEditingController _passwordController = TextEditingController();
+  State<Login> createState() => _LoginState();
+}
 
+class _LoginState extends State<Login> {
+  late AuthController authController;
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+
+  @override
+  void initState() {
+    super.initState();
+    // Inisialisasi AuthController
+    if (!Get.isRegistered<AuthController>()) {
+      authController = Get.put(AuthController());
+    } else {
+      authController = Get.find<AuthController>();
+    }
+    
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -38,7 +66,7 @@ class Login extends StatelessWidget {
                           ),
                         ),
 
-                        new Center(
+                        Center(
                           child: Text(
                             'Selamat Datang Kembali',
                             style: TextStyle(
@@ -48,7 +76,7 @@ class Login extends StatelessWidget {
                           ),
                         ),
                         SizedBox(height: 8),
-                        new Center(
+                        Center(
                           child: Text(
                             'Masuk untuk melanjutkan perjalanan Bunda',
                             style: TextStyle(fontSize: 14, color: Colors.grey),
@@ -79,8 +107,10 @@ class Login extends StatelessWidget {
                   ),
                   Align(
                     alignment: Alignment.centerRight,
-                    child: const TextButton(
-                      onPressed: null,
+                    child: TextButton(
+                      onPressed: () {
+                        // Implementasi lupa password
+                      },
                       child: Text(
                         'Lupa Kata Sandi?',
                         style: TextStyle(
@@ -91,12 +121,18 @@ class Login extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 30),
-                  SizedBox(
+                  // Tombol Masuk dengan Loading State
+                  Obx(() => SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {
-                        Get.offNamed('/quisioner');
-                      },
+                      onPressed: authController.isLoading.value
+                          ? null
+                          : () {
+                              authController.login(
+                                _emailController.text.trim(),
+                                _passwordController.text.trim(),
+                              );
+                            },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Color(0xFFF48FB1),
                         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -104,16 +140,26 @@ class Login extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                         ),
                       ),
-                      child: const Text(
-                        'Masuk',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
+                      child: authController.isLoading.value
+                          ? const SizedBox(
+                              height: 20,
+                              width: 20,
+                              child: CircularProgressIndicator(
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : const Text(
+                              'Masuk',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
                     ),
-                  ),
+                  )),
 
                   const SizedBox(height: 10),
                   Row(

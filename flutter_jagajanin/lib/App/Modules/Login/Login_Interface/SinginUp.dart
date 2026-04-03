@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_jagajanin/App/Modules/Login/View/Widget/Tools/TextField_interface.dart';
-import 'package:flutter_jagajanin/App/Data/Repositories/Register.dart';
+import 'package:flutter_jagajanin/App/Data/Repositories/Register_controller.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/get.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -12,15 +13,21 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  late RegisterController registerController;
+
+  @override
+  void initState() {
+    super.initState();
+    // Inisialisasi RegisterController
+    if (!Get.isRegistered<RegisterController>()) {
+      registerController = Get.put(RegisterController());
+    } else {
+      registerController = Get.find<RegisterController>();
+    }
+  }
 
   @override
   void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
     super.dispose();
   }
 
@@ -54,7 +61,7 @@ class _RegisterState extends State<Register> {
                         ),
                       ),
 
-                      new Center(
+                      Center(
                         child: Text(
                           'Buat Akun',
                           style: TextStyle(
@@ -64,7 +71,7 @@ class _RegisterState extends State<Register> {
                         ),
                       ),
                       SizedBox(height: 8),
-                      new Center(
+                      Center(
                         child: Text(
                           textAlign: TextAlign.center,
                           'Bergabunglah dan pantau perjalanan \nkehamilan Bunda',
@@ -82,7 +89,7 @@ class _RegisterState extends State<Register> {
                   hintInput: 'Nama Lengkap',
                   textBelakang: null,
                   ikonKiri: Icons.person,
-                  controller: _nameController,
+                  controller: registerController.nameController,
                   ),
                 const SizedBox(height: 10),
                 CustomTextField(
@@ -91,7 +98,16 @@ class _RegisterState extends State<Register> {
                   hintInput: 'Masukkan email Anda',
                   textBelakang: null,
                   ikonKiri: Icons.email,
-                  controller: _emailController,
+                  controller: registerController.emailController,
+                ),
+                const SizedBox(height: 10),
+                CustomTextField(
+                  judulAtas: 'No. Handphone',
+                  labelInput: 'No. HP',
+                  hintInput: 'Masukkan nomor HP (contoh: 08123456789)',
+                  textBelakang: null,
+                  ikonKiri: Icons.phone,
+                  controller: registerController.phoneController,
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
@@ -101,18 +117,23 @@ class _RegisterState extends State<Register> {
                   textBelakang: null,
                   ikonKiri: Icons.lock,
                   isPassword: true,
-                  controller: _passwordController,
+                  controller: registerController.passwordController,
                 ),
                 SizedBox(height: 30),
-                SizedBox(
+                // Tombol Daftar dengan Loading State
+                Obx(() => SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () {
-                      registerUser(context, 
-                      _nameController.text, 
-                      _emailController.text,
-                      _passwordController.text);
-                    },
+                    onPressed: registerController.isLoading.value
+                        ? null
+                        : () {
+                            registerController.register(
+                              registerController.nameController.text.trim(),
+                              registerController.emailController.text.trim(),
+                              registerController.passwordController.text.trim(),
+                              registerController.phoneController.text.trim(),
+                            );
+                          },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFFF48FB1),
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -120,16 +141,26 @@ class _RegisterState extends State<Register> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                     ),
-                    child: const Text(
-                      'Daftar Sekarang',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    child: registerController.isLoading.value
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : const Text(
+                            'Daftar Sekarang',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                   ),
-                ),
+                )),
 
                 const SizedBox(height: 10),
                 Row(

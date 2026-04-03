@@ -27,7 +27,15 @@ class _Trimester1KiaState extends State<Trimester1Kia> {
   @override
   void initState() {
     super.initState();
-    controller = Get.find<DetailController>();
+    
+    // Coba ambil DetailController, jika tidak ada buat fallback
+    try {
+      controller = Get.find<DetailController>();
+      print('✅ Trimester1_KIA: DetailController ditemukan');
+    } catch (e) {
+      print('⚠️ Trimester1_KIA: DetailController tidak ditemukan, create fallback');
+      controller = Get.put(DetailController(), permanent: false);
+    }
     
     // Inisialisasi checklist status
     final items = [
@@ -60,14 +68,33 @@ class _Trimester1KiaState extends State<Trimester1Kia> {
               final data = controller.detailData.value;
 
               if (data == null) {
-                return const Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(),
-                      SizedBox(height: 10),
-                      Text("Menunggu data janin..."),
-                    ],
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Icon(Icons.info_outline, size: 50, color: Colors.grey),
+                        SizedBox(height: 20),
+                        Text(
+                          "Data Kehamilan Tidak Tersedia",
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          "Silakan isi data di halaman Quisioner terlebih dahulu.",
+                          style: TextStyle(fontSize: 14, color: Colors.grey),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 20),
+                        ElevatedButton(
+                          onPressed: () => Get.toNamed('/quisioner'),
+                          child: Text("Isi Data Quisioner"),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               }
